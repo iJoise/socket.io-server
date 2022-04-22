@@ -24,10 +24,10 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello world</h1>');
 });
 
-io.on('connection', socket => {
+io.on('connection', socketChannel => {
   console.log('a user connected');
 
-  socket.on('client-message-sent', message => {
+  socketChannel.on('client-message-sent', message => {
     const messageItem = {
       message: message.message,
       id: randomUUID(),
@@ -35,10 +35,14 @@ io.on('connection', socket => {
     };
     messages.push(messageItem);
 
-    socket.emit('new-message-sent', messageItem);
+    socketChannel.emit('new-message-sent', messageItem);
   });
 
-  socket.emit('init-messages-published', messages);
+  socketChannel.on('client-typed', name => {
+    io.emit('user-typing', name);
+  });
+
+  socketChannel.emit('init-messages-published', messages);
 });
 
 const start = async () => {
