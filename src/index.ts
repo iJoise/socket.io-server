@@ -29,7 +29,7 @@ io.on('connection', socket => {
 
   socket.on('client-message-sent', message => {
     const messageItem = {
-      message: message.mess,
+      message: message.message,
       id: randomUUID(),
       user: { id: randomUUID(), name: message.name },
     };
